@@ -21,10 +21,17 @@ mongoose
 const authRoutes = require("./auth");
 app.use("/api/auth", authRoutes);
 
+// Enable CORS for localhost:30000
+app.use(cors({
+  origin: "http://localhost:3000", // Allow only this origin
+  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+  credentials: true // Allow cookies if required
+}));
+
 
 app.get("/api/dashboard/:id", async (req, res) => {
   const { id } = req.params;
-
+console.log(id)
   const dashboardData = {
     message: `Dashboard data for card ${id}`,
     details: { visits: Math.floor(Math.random() * 100), sales: Math.floor(Math.random() * 50) }
