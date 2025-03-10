@@ -39,7 +39,7 @@ app.get("/api/dashboard/:id", async (req, res) => {
   res.json(dashboardData);
 });
 
-// this is second code 
+// this is second table api calling 
 app.get("/api/table/:id", async (req, res) => {
   const { id } = req.params;
   console.log(id)
