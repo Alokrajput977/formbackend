@@ -31,13 +31,23 @@ app.use(cors({
 
 app.get("/api/dashboard/:id", async (req, res) => {
   const { id } = req.params;
-console.log(id)
+  console.log(id)
   const dashboardData = {
     message: `Dashboard data for card ${id}`,
     details: { visits: Math.floor(Math.random() * 100), sales: Math.floor(Math.random() * 50) }
   };
   res.json(dashboardData);
 });
+
+// app.get("/api/table/:id", async (req, res) => {
+//   const { id } = req.params;
+//   console.log(id)
+//   const dashboardData = {
+//     message: `Dashboard data for card ${id}`,
+//     details: { visits: Math.floor(Math.random() * 100), sales: Math.floor(Math.random() * 50) }
+//   };
+//   res.json(dashboardData);
+// });
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
