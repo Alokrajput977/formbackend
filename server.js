@@ -21,11 +21,10 @@ mongoose
 const authRoutes = require("./auth");
 app.use("/api/auth", authRoutes);
 
-// Enable CORS for localhost:30000
 app.use(cors({
-  origin: "http://localhost:3000", // Allow only this origin
-  methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
-  credentials: true // Allow cookies if required
+  origin: "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true 
 }));
 
 
@@ -39,7 +38,7 @@ app.get("/api/dashboard/:id", async (req, res) => {
   res.json(dashboardData);
 });
 
-// this is second table api calling 
+
 app.get("/api/table/:id", async (req, res) => {
   const { id } = req.params;
   console.log(id)
