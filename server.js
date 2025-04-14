@@ -10,16 +10,15 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(express.json());
 app.use(cors({
   origin: "http://localhost:3001",
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true 
+  credentials: true
 }));
 
 
-const mongoURI = process.env.MONGO_URI; 
+const mongoURI = process.env.MONGO_URI;
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
@@ -28,7 +27,7 @@ mongoose.connect(mongoURI, {
   .then(() => console.log("✅ MongoDB Connected"))
   .catch(err => console.error("❌ MongoDB Connection Error:", err));
 
-// --- Mongoose Schema and Model for Users ---
+
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -37,21 +36,16 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model("User", userSchema);
 
-// --- Route: User Sign Up ---
 app.post("/api/auth/signup", async (req, res) => {
   const { name, email, password } = req.body;
   try {
-    // Check if user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ msg: "User already exists" });
     }
-
-    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create and save new user
     const newUser = new User({
       name,
       email,
@@ -66,23 +60,19 @@ app.post("/api/auth/signup", async (req, res) => {
   }
 });
 
-// --- Route: User Login ---
 app.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
-    // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
-    // Create and sign a JWT token
     const payload = {
       user: {
         id: user._id,
@@ -98,9 +88,8 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
-// --- Middleware: Protect Routes ---
 const authMiddleware = (req, res, next) => {
-  // The token is expected to be sent in the "Authorization" header.
+
   const token = req.header("Authorization");
   if (!token) {
     return res.status(401).json({ msg: "No token, authorization denied" });
@@ -114,8 +103,6 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-// --- Protected Route: Dashboard Data ---
-// This example returns a list of all registered users (excluding passwords).
 app.get("/api/dashboard", authMiddleware, async (req, res) => {
   try {
     const users = await User.find().select("-password");
@@ -126,7 +113,6 @@ app.get("/api/dashboard", authMiddleware, async (req, res) => {
   }
 });
 
-// --- Start Server ---
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
 });
