@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cors({
-  origin: "http://localhost:3001",
+  origin: "http://172.28.80.1:3000",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
